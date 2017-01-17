@@ -9,3 +9,7 @@ family:
 attribute:
     resource: '@PimApiBundle/Resources/config/routing/attribute.yml'
     prefix: /rest/v1/attributes
+
+endpoint:
+    resource: '@PimApiBundle/Resources/config/routing/endpoint.yml'
+    prefix: /rest/v1
