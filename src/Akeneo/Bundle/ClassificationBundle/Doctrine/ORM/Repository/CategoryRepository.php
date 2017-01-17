@@ -445,4 +445,77 @@ class CategoryRepository extends NestedTreeRepository implements
     {
         return $this->getChildrenQueryBuilder($category, false, null, 'ASC', $includeNode);
     }
+
+    public function countByCode($code = null)
+    {
+        $qb = $this->getCode($code);
+        $qb->select('count(c.id)');
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function findByCode($limit, $code = null)
+    {
+        $qb = $this->getCode($code);
+        $qb->setMaxResults($limit);
+
+        if (null !== $code) {
+            $qb->andWhere('c.code > :code')
+                ->setParameter('code', $code);
+        }
+
+        return $qb->getQuery()->execute();
+    }
+
+    /**
+     * Find the previous cursor by code
+     *
+     * @param string|null $code
+     *
+     * @return mixed
+     */
+    public function findPreviousCursor($limit, $code = null)
+    {
+        $qb = $this->getCode();
+        $qb->select('c.code')
+            ->andWhere('c.code < :code')
+            ->setParameter('code', $code)
+            ->setMaxResults($limit)
+            ->orderBy('c.code', 'DESC');
+
+        $result = $qb->getQuery()->getScalarResult();
+
+        return $limit !== count($result) || empty($result) ? null : end($result)['code'];
+    }
+
+    /**
+     * Find the last cursor
+     *
+     * @param int         $count
+     * @param string|null $code
+     *
+     * @return mixed
+     */
+    public function findLastCursor($count, $limit, $code = null)
+    {
+        $nbPage = ceil($count / $limit);
+        $itemsInLastPage = $count - ($nbPage - 1) * $limit;
+
+        $qb = $this->getCode($code);
+        $qb->select('c.code')
+            ->setMaxResults($itemsInLastPage+=1)
+            ->orderBy('c.code', 'DESC');
+
+        $result = $qb->getQuery()->getScalarResult();
+
+        return end($result)['code'];
+    }
+
+    private function getCode($code = null)
+    {
+        $qb = $this->createQueryBuilder('c')
+            ->orderBy('c.code', 'asc');
+
+        return $qb;
+    }
 }

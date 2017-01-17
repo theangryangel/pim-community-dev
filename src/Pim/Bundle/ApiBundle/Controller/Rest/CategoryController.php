@@ -52,4 +52,33 @@ class CategoryController
 
         return new JsonResponse($categoryStandard);
     }
+
+    public function listAction(Request $request)
+    {
+        $code = $request->query->get('code');
+        $limit = $request->query->getInt('limit', 3);
+        $categories = $this->repository->findByCode($limit, $code);
+
+        $standardCategories = [];
+        foreach ($categories as $category) {
+            $standardCategories[] = $this->normalizer->normalize($category, 'standard');
+        }
+
+        $count = $this->repository->countByCode($code);
+        $url = 'http://pce-master.local/api/rest/v1/categories/?limit=' . $limit;
+
+        $response = [
+            'first'    => $url,
+            'last'     => $url . '&code=' .$this->repository->findLastCursor($count, $limit, $code),
+            'next'     => $url . '&code=' .end($standardCategories)['code']
+        ];
+
+        if (null !== $code) {
+            $response['previous'] = $url .'&code=' . $this->repository->findPreviousCursor($limit, $code);
+        }
+
+        $response['items'] = $standardCategories;
+
+        return new JsonResponse($response);
+    }
 }
