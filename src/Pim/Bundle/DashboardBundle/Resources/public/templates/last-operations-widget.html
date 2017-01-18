@@ -8,10 +8,13 @@
                 <%- __('pim_dashboard.widget.last_operations.type') %>
             </th>
             <th class="AknGrid-headerCell">
-                <%- __('pim_dashboard.widget.last_operations.profile name') %>
+                <%- __('pim_dashboard.widget.last_operations.profile_name') %>
             </th>
             <th class="AknGrid-headerCell">
                 <%- __('pim_dashboard.widget.last_operations.status') %>
+            </th>
+            <th class="AknGrid-headerCell">
+                <%- __('pim_dashboard.widget.last_operations.warning_count') %>
             </th>
             <th class="AknGrid-headerCell"></th>
         </tr>
@@ -25,6 +28,11 @@
             <td class="AknGrid-bodyCell">
                 <span class="AknBadge <%- operation.labelClass %>">
                     <%- operation.statusLabel %>
+                </span>
+            </td>
+            <td class="AknGrid-bodyCell">
+                <span class="AknBadge AknBadge--<%- (operation.warningCount > 0) ? 'warning' : 'success' %>">
+                    <%- operation.warningCount %>
                 </span>
             </td>
             <td class="AknGrid-bodyCell AknGrid-bodyCell--right">

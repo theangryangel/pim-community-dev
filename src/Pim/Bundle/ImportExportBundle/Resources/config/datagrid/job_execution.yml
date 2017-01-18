@@ -22,6 +22,12 @@ datagrid:
                 label:     Status
                 type:      translateable
                 data_name: statusLabel
+            warning:
+                label:         Warnings
+                type:          twig
+                data_name:     warningCount
+                template:      PimImportExportBundle:Property:warning.html.twig
+                frontend_type: html
         properties:
             id: ~
             show_link:
@@ -47,6 +53,8 @@ datagrid:
                     data_name: date
                 status:
                     data_name: statusLabel
+                status:
+                    data_name: warningCount
             default:
                 date: '%oro_datagrid.extension.orm_sorter.class%::DIRECTION_DESC'
         filters:
