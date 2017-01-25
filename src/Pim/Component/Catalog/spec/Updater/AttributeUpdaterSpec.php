@@ -64,7 +64,7 @@ class AttributeUpdaterSpec extends ObjectBehavior
         $data = [
             'labels' => ['en_US' => 'Test1', 'fr_FR' => 'Test2'],
             'group' => 'marketing',
-            'attribute_type' => 'pim_catalog_text',
+            'type' => 'pim_catalog_text',
             'date_min' => '2016-12-12T00:00:00+01:00'
         ];
 
@@ -87,7 +87,7 @@ class AttributeUpdaterSpec extends ObjectBehavior
         $attributeType->getBackendType()->willReturn('backend');
         $attributeType->isUnique()->willReturn(true);
 
-        $accessor->setValue($attribute, 'attribute_type', 'pim_catalog_text');
+        $accessor->setValue($attribute, 'type', 'pim_catalog_text');
 
         $this->update($attribute, $data);
     }
@@ -105,7 +105,7 @@ class AttributeUpdaterSpec extends ObjectBehavior
         $data = [
             'labels' => ['en_US' => 'Test1', 'fr_FR' => 'Test2'],
             'group' => 'marketing',
-            'attribute_type' => 'pim_catalog_text'
+            'type' => 'pim_catalog_text'
         ];
 
         $attribute->setLocale('en_US')->shouldBeCalled();
@@ -140,13 +140,13 @@ class AttributeUpdaterSpec extends ObjectBehavior
     {
         $this->shouldThrow(
             InvalidPropertyException::valueNotEmptyExpected(
-                'attribute_type',
+                'type',
                 'updater',
                 'attribute'
             )
         )->during(
             'update',
-            [$attribute, ['attribute_type' => '']]
+            [$attribute, ['type' => '']]
         );
     }
 
@@ -156,14 +156,14 @@ class AttributeUpdaterSpec extends ObjectBehavior
 
         $this->shouldThrow(
             InvalidPropertyException::validEntityCodeExpected(
-                'attribute_type',
+                'type',
                 'attribute type',
                 'The attribute type does not exist',
                 'updater',
                 'attribute',
                 'unknown_type'
             )
-        )->during('update', [$attribute, ['attribute_type' => 'unknown_type']]);
+        )->during('update', [$attribute, ['type' => 'unknown_type']]);
     }
 
     function it_throws_an_exception_if_data_is_not_a_date(AttributeInterface $attribute)
@@ -219,7 +219,7 @@ class AttributeUpdaterSpec extends ObjectBehavior
             'non_existent_field' => 'field',
             'labels' => ['en_US' => 'Test1', 'fr_FR' => 'Test2'],
             'group' => 'marketing',
-            'attribute_type' => 'pim_catalog_text'
+            'type' => 'pim_catalog_text'
         ];
 
         $this
